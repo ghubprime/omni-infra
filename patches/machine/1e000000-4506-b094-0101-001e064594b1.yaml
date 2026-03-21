@@ -1,12 +1,12 @@
 metadata:
     namespace: default
     type: ConfigPatches.omni.sidero.dev
-    id: 500-ad80630e-a3cb-4ea4-9bf1-d7336d6519e9
+    id: 500-1e000000-4506-b094-0101-001e064594b1
     labels:
-      omni.sidero.dev/machine: 1e000000-4506-9a26-0101-001e0645269b
+      omni.sidero.dev/machine: 1e000000-4506-b094-0101-001e064594b1
     annotations:
-      description: odroid node config
-      name: 500-ad80630e-a3cb-4ea4-9bf1-d7336d6519e9-machine-patch
+      description: odroid node 2 config
+      name: 500-1e000000-4506-b094-0101-001e064594b1-machine-patch
 spec:
   data: |-
     machine:
@@ -25,17 +25,10 @@ spec:
                 - bond0
               vlan:
                 vlanFiltering: true
-            addresses:
-              - 10.8.27.200/24          
-            routes:
-              - gateway: 10.8.27.254
-                network: 0.0.0.0/0                
-          #- interface: net1
+            dhcp: true
           - interface: ceph0
             addresses:
-              - 10.10.0.1/16
-        nameservers:
-          - 10.8.27.254
+              - 10.10.0.2/16
       sysctls:
         net/ipv6/conf/bond0/disable_ipv6: "1"
         net/ipv6/conf/br-ext/disable_ipv6: "1"

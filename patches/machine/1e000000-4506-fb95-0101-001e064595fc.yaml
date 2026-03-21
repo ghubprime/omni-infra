@@ -1,25 +1,22 @@
 metadata:
     namespace: default
     type: ConfigPatches.omni.sidero.dev
-    id: 500-69f24d56-72ac-b692-058e-5d59e2169f70
+    id: 500-1e000000-4506-fb95-0101-001e064595fc
     labels:
-      omni.sidero.dev/machine: 69f24d56-72ac-b692-058e-5d59e2169f70
+      omni.sidero.dev/machine: 1e000000-4506-fb95-0101-001e064595fc
     annotations:
-      description: 69f24d56-72ac-b692-058e-5d59e2169f70 system config
-      name: 500-69f24d56-72ac-b692-058e-5d59e2169f70-machine-patch
+      description: odroid node 1 config
+      name: 500-1e000000-4506-fb95-0101-001e064595fc-machine-patch
 spec:
   data: |-
     machine:
-      kubelet:
-        nodeIP:
-          validSubnets:
-            - 192.168.1.0/16
       network:
         interfaces:
           - interface: bond0
             bond:
               interfaces:
-                - ens192
+                - enp1s0
+                - enp2s0
               mode: active-backup
               miimon: 100
           - interface: br-ext
@@ -28,9 +25,7 @@ spec:
                 - bond0
               vlan:
                 vlanFiltering: true
-            dhcp: true                   
-          #- interface: net0
-          #- interface: net1
+            dhcp: true
           - interface: ceph0
             addresses:
               - 10.10.0.1/16

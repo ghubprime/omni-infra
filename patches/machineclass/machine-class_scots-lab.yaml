@@ -1,7 +1,7 @@
 metadata:
     namespace: default
     type: MachineClasses.omni.sidero.dev
-    id: dev
+    id: scots-lab
 spec:
     matchlabels:
-        - cluster-site=k8s-dev
+        - cluster-site=k8s-scots-lab

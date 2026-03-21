@@ -1,8 +1,0 @@
-apiVersion: v1
-data:
-  clusterConfigHash: 57b73c1448c34031fa3abff1ac915a06a0adb7ab
-  clusterConfigPath: /patches
-kind: ConfigMap
-metadata:
-  name: omni-cluster-config-hash
-  namespace: omni-system

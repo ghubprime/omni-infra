@@ -1,25 +1,22 @@
 metadata:
     namespace: default
     type: ConfigPatches.omni.sidero.dev
-    id: 500-b9f24d56-cb8b-ac1b-0f32-89b623a1fa61
+    id: 500-1e000000-4506-0595-0101-001e06459506
     labels:
-      omni.sidero.dev/machine: b9f24d56-cb8b-ac1b-0f32-89b623a1fa61
+      omni.sidero.dev/machine: 1e000000-4506-0595-0101-001e06459506
     annotations:
-      description: k8s-dev node config
-      name: 500-b9f24d56-cb8b-ac1b-0f32-89b623a1fa61-machine-patch
+      description: odroid node 3 config
+      name: 500-1e000000-4506-0595-0101-001e06459506-machine-patch
 spec:
   data: |-
     machine:
-      kubelet:
-        nodeIP:
-          validSubnets:
-            - 192.168.0.0/24
       network:
         interfaces:
           - interface: bond0
             bond:
               interfaces:
-                - ens192
+                - enp1s0
+                - enp2s0
               mode: active-backup
               miimon: 100
           - interface: br-ext
@@ -28,17 +25,10 @@ spec:
                 - bond0
               vlan:
                 vlanFiltering: true
-            addresses:
-              - 192.168.0.201/24
-            routes:
-              - gateway: 192.168.0.254
-                network: 0.0.0.0/0
-          #- interface: net1
+            dhcp: true
           - interface: ceph0
             addresses:
-              - 10.10.0.1/16
-        nameservers:
-          - 192.168.0.247
+              - 10.10.0.3/16
       sysctls:
         net/ipv6/conf/bond0/disable_ipv6: "1"
         net/ipv6/conf/br-ext/disable_ipv6: "1"
