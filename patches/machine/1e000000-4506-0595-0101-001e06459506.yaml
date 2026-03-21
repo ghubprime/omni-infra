@@ -27,11 +27,6 @@ spec:
                 vlanFiltering: true
             dhcp: true
           - interface: ceph0
+            dummy: true
             addresses:
               - 10.10.0.3/16
-      sysctls:
-        net/ipv6/conf/bond0/disable_ipv6: "1"
-        net/ipv6/conf/br-ext/disable_ipv6: "1"
-        net/ipv6/conf/net0/disable_ipv6: "1"
-        net/ipv6/conf/net1/disable_ipv6: "1"
-        net/ipv6/conf/ceph0/disable_ipv6: "1"

@@ -6,7 +6,7 @@ OUTPUT_PATH=$(echo "$RESOURCE_LIST" | yq e '.functionConfig.spec.outputPath' - )
 
 CONF_PATH_GIT="/${CONF_PATH}"
 CONF_PATH="$(git rev-parse --show-toplevel)/${CONF_PATH}"
-CONF_HASH=$(find "$CONF_PATH" -type f -print | git hash-object --stdin-paths | git hash-object --stdin)
+CONF_HASH=$(find "$CONF_PATH" -type f -print | sort | git hash-object --stdin-paths | git hash-object --stdin)
 
 #cp -r $CONF_PATH/* $OUTPUT_PATH
 
