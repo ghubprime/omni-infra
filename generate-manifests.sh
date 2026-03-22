@@ -51,8 +51,9 @@ while read RESOURCE; do
     # create output directory if it does not exist
     mkdir -p "$MANIFESTS_DST"
 
-    # build new manifests
-    kustomize build "$RESOURCE" --load-restrictor LoadRestrictionsNone --enable-helm --enable-alpha-plugins --enable-exec -o "$MANIFESTS_DST"
+    # build new manifests directly into a single multi-document file to avoid OS filename constraints (like NTFS colons)
+    BOOTSTRAP_SINGLE="${MANIFESTS_DST}/_bootstrap.yaml"
+    kustomize build "$RESOURCE" --load-restrictor LoadRestrictionsNone --enable-helm --enable-alpha-plugins --enable-exec > "$BOOTSTRAP_SINGLE"
 
     # when run as commit hook, we should
     # add generated files to staging
