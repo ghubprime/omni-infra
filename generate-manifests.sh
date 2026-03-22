@@ -33,7 +33,12 @@ while read RESOURCE; do
 
   # check for changes
   # need to check app specific helm/{base,overlays}, kustomize/{base,overlays}
-  CHANGES_LIST=$(git diff --staged --name-only HEAD ${RESOURCE_PATHS[@]})
+  if [ "$1" = "--force" ]; then
+    CHANGES_LIST="forced"
+  else
+    # FIX: Added '--' and wrapped the array in quotes so Git knows these are strictly file paths
+    CHANGES_LIST=$(git diff --staged --name-only HEAD -- "${RESOURCE_PATHS[@]}")
+  fi
   if [ ! -z "$CHANGES_LIST" ]; then
     # cleanup existing manifests
     rm -rf "${MANIFESTS_DST}"
