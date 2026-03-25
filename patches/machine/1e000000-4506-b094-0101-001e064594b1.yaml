@@ -12,6 +12,8 @@ spec:
     machine:
       network:
         interfaces:
+          - interface: enp2s0
+            dhcp: false
           - interface: br-ext
             bridge:
               interfaces:
