@@ -12,23 +12,8 @@ spec:
     machine:
       network:
         interfaces:
-          - interface: bond0
-            bond:
-              interfaces:
-                - enp1s0
-                - enp2s0
-              mode: active-backup
-              miimon: 100
           - interface: br-ext
             bridge:
               interfaces:
-                - bond0
-              vlan:
-                vlanFiltering: true
+                - enp2s0
             dhcp: true
-          - interface: ceph0
-            vlan:
-              vlanId: 3000
-              link: br-ext
-            addresses:
-              - 10.10.0.3/16
