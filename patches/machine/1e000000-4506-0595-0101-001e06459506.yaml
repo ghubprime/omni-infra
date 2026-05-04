@@ -23,6 +23,8 @@ spec:
               interfaces:
                 - enp2s0
             dhcp: true
+            addresses:
+              - 192.168.8.100/24
           - interface: enp1s0
             dhcp: false
             addresses:
