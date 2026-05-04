@@ -5,11 +5,15 @@ metadata:
     labels:
       omni.sidero.dev/machine: 1e000000-4506-b094-0101-001e064594b1
     annotations:
-      description: odroid node 2 config
+      description: talos-f8k-btg (192.168.8.222) - switch ports 3+5
       name: 500-1e000000-4506-b094-0101-001e064594b1-machine-patch
 spec:
   data: |-
     machine:
+      kubelet:
+        nodeIP:
+          validSubnets:
+            - 192.168.8.0/24
       network:
         interfaces:
           - interface: enp2s0
@@ -19,3 +23,8 @@ spec:
               interfaces:
                 - enp2s0
             dhcp: true
+          - interface: enp1s0
+            dhcp: false
+            addresses:
+              - 10.10.0.3/24
+
