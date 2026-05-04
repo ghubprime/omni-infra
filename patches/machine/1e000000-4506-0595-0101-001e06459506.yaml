@@ -12,19 +12,10 @@ spec:
     machine:
       network:
         interfaces:
-          - interface: enp1s0
-            dhcp: false
           - interface: enp2s0
             dhcp: false
-          - interface: bond0
-            dhcp: false
-            bond:
-              interfaces:
-                - enp1s0
-                - enp2s0
-              mode: balance-xor
           - interface: br-ext
             bridge:
               interfaces:
-                - bond0
+                - enp2s0
             dhcp: true
