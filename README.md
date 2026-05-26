@@ -9,7 +9,7 @@ The foundational infrastructure repository providing machine-specific configurat
 │         k8s-cluster             │     │          omni-infra              │
 │                                 │     │                                  │
 │  • Cluster template             │     │  • Machine-specific patches      │
-│  • App-of-apps (47 ArgoCD apps) │     │  • Network topology configs      │
+│  • App-of-apps (48 ArgoCD apps) │     │  • Network topology configs      │
 │  • Kustomize overlays           │     │  • Machine class definitions     │
 │  • Helm values                  │     │  • Shared generic manifests      │
 │  • Bootstrap manifests          │     │                                  │
