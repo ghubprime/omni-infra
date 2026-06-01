@@ -54,7 +54,6 @@ Like `k8s-cluster`, this repository uses a GitHub Actions pipeline to:
 2. Commit the output to `manifests/`
 3. ArgoCD automatically syncs changes from the committed manifests
 
-> **⚠️ Windows Warning**: Do **not** run `generate-manifests.sh` locally on Windows due to a known Kustomize Helm inflation bug that silently deletes output directories.
 
 ## Dependency Management
 
