@@ -19,7 +19,7 @@ jobs:
           fetch-depth: 0 # IMPORTANT: Because your script uses 'git diff', GitHub needs the full git history
 
       - name: Install Helm
-        uses: azure/setup-helm@v4
+        uses: azure/setup-helm@v5
 
       - name: Install Kustomize
         run: |
