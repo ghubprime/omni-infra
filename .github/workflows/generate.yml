@@ -19,19 +19,75 @@ jobs:
           fetch-depth: 0 # IMPORTANT: Because your script uses 'git diff', GitHub needs the full git history
 
       - name: Install Helm
-        uses: azure/setup-helm@v4
+        uses: azure/setup-helm@v5
+        with:
+          version: 'v3.12.0'
 
       - name: Install Kustomize
         run: |
           cd /tmp
-          curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+          curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash -s 5.4.3
           sudo mv kustomize /usr/local/bin/
+
+      - name: Install kubeconform
+        run: |
+          KUBECONFORM_VERSION="v0.6.7"
+          curl -sL "https://github.com/yannh/kubeconform/releases/download/${KUBECONFORM_VERSION}/kubeconform-linux-amd64.tar.gz" | tar xz -C /tmp
+          sudo mv /tmp/kubeconform /usr/local/bin/
 
       - name: Make script executable and run it
         run: |
           # If your script is in a specific folder, update the path below (e.g., ./scripts/generate-manifests.sh)
           chmod +x ./generate-manifests.sh
+          # Kustomize customFunction exec plugins must be executable too. Windows
+          # checkouts don't carry the bit, and a non-executable plugin makes
+          # 'kustomize build' fail and emit a 0-byte manifest (Rule #13).
+          # Scoped to */plugins/* so the charts/ offline cache is never touched.
+          find kustomize -path '*/plugins/*' -name '*.sh' -exec chmod +x {} +
           ./generate-manifests.sh --force
+
+      - name: Validate generated manifests
+        run: |
+          # globstar is OFF by default in the Actions bash; without it '**' collapses
+          # to '*' and the glob below silently matches nothing, making this step a no-op.
+          shopt -s globstar nullglob
+
+          FAILED=0
+          COUNT=0
+          for manifest in manifests/**/_bootstrap.yaml; do
+            COUNT=$((COUNT + 1))
+
+            # Guard: Reject empty or near-empty manifests (0-byte deletion trap, Rule #13)
+            SIZE=$(stat -c%s "$manifest" 2>/dev/null || echo 0)
+            if [ "$SIZE" -lt 10 ]; then
+              echo "❌ FATAL: $manifest is empty or near-empty (${SIZE} bytes) — refusing to commit"
+              FAILED=1
+              continue
+            fi
+
+            # Validate YAML structure and K8s schema conformance
+            # --ignore-missing-schemas: skip CRDs (Cilium, Gateway API, etc.) that have no upstream schema
+            # --summary: only show errors, not every valid resource
+            kubeconform \
+              --kubernetes-version 1.36.1 \
+              --ignore-missing-schemas \
+              --summary \
+              --output text \
+              "$manifest" || FAILED=1
+          done
+
+          # A zero-match run means the render produced nothing — that must fail loudly,
+          # not report success.
+          if [ "$COUNT" -eq 0 ]; then
+            echo "::error::No _bootstrap.yaml found under manifests/ — render produced nothing"
+            exit 1
+          fi
+
+          if [ "$FAILED" -ne 0 ]; then
+            echo "::error::Manifest validation failed — aborting commit to prevent ArgoCD auto-sync of broken state"
+            exit 1
+          fi
+          echo "✅ Validated $COUNT manifest(s) successfully"
 
       - name: Commit and Push generated manifests
         uses: stefanzweifel/git-auto-commit-action@v7
