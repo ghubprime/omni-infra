@@ -1,0 +1,29 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "ignorePaths": [
+    "**/charts/**",
+    "**/manifests/**"
+  ],
+  "prConcurrentLimit": 2,
+  "packageRules": [
+    {
+      "description": "This repo carries per-machine Talos patches and machine classes. A bad change here does not degrade an app — it can make a node unbootable. Rule #1 in particular: machine.install.extraKernelArgs permanently bricks these UKI-booting machines and needs onsite USB recovery. Nothing here is ever automerged, and every update needs an explicit click.",
+      "matchFileNames": [
+        "patches/**"
+      ],
+      "dependencyDashboardApproval": true,
+      "addLabels": ["machine-config", "review-against-rule-1"],
+      "automerge": false
+    },
+    {
+      "description": "Rule #27 — major bumps are always separate, single-package PRs.",
+      "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true,
+      "addLabels": ["major-bump"],
+      "automerge": false
+    }
+  ]
+}
